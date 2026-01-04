@@ -14,4 +14,12 @@ export class HomeComponent {
   navigateToClani() {
     this.router.navigate(['/clani']);
   }
+
+  navigateToIgrisce() {
+    this.router.navigate(['/igrisce']);
+  }
+
+  navigateToLogin() {
+    this.router.navigate(['/login']);
+  }
 }

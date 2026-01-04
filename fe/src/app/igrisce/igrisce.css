@@ -1,0 +1,463 @@
+.igrisce-container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  color: #1b5e20;
+  margin-bottom: 30px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.view-toggle {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.toggle-btn {
+  padding: 12px 30px;
+  background: white;
+  color: #2e7d32;
+  border: 2px solid #2e7d32;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.toggle-btn.active {
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  color: white;
+  border-color: transparent;
+}
+
+.toggle-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #2e7d32;
+  font-size: 1.2rem;
+}
+
+/* Calendar Styles */
+.calendar-wrapper {
+  margin-top: 20px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 0 20px;
+}
+
+.calendar-header h2 {
+  color: #1b5e20;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.nav-btn {
+  padding: 10px 20px;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  background: #1b5e20;
+  transform: scale(1.1);
+}
+
+.month-year-selector {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.selector-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.selector-group label {
+  color: #1b5e20;
+  font-weight: 600;
+}
+
+.month-select,
+.year-select {
+  padding: 8px 15px;
+  border: 2px solid #c8e6c9;
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  color: #333;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.month-select:hover,
+.year-select:hover {
+  border-color: #2e7d32;
+}
+
+.month-select:focus,
+.year-select:focus {
+  outline: none;
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+}
+
+.calendar {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.weekday-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.weekday {
+  text-align: center;
+  font-weight: 600;
+  color: #1b5e20;
+  padding: 10px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.calendar-day {
+  min-height: 100px;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.calendar-day:not(.empty):hover {
+  background: #e8f5e9;
+  border-color: #2e7d32;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-day.empty {
+  background: #fafafa;
+  cursor: default;
+}
+
+.calendar-day.has-rezervacije {
+  background: #e8f5e9;
+  border-color: #66bb6a;
+}
+
+.calendar-day.selected {
+  background: #c8e6c9;
+  border: 2px solid #2e7d32;
+}
+
+.calendar-day.today {
+  border: 2px solid #ff6f00;
+  box-shadow: 0 0 10px rgba(255, 111, 0, 0.3);
+}
+
+.day-number {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.rezervacije-count {
+  font-size: 0.75rem;
+  color: #2e7d32;
+  font-weight: 500;
+}
+
+/* Day Details */
+.day-details {
+  margin-top: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.day-details h3 {
+  color: #1b5e20;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.add-btn {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.add-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.add-form {
+  background: #f5f5f5;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  color: #1b5e20;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #c8e6c9;
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #2e7d32;
+}
+
+.clan-search-group {
+  position: relative;
+}
+
+.clan-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid #2e7d32;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.clan-option {
+  padding: 12px 15px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.clan-option:hover {
+  background: #e8f5e9;
+}
+
+.clan-option:not(:last-child) {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.selected-clan-info {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #e8f5e9;
+  color: #1b5e20;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.save-btn {
+  padding: 10px 25px;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.save-btn:hover {
+  background: #1b5e20;
+}
+
+.empty-message {
+  text-align: center;
+  padding: 30px;
+  color: #666;
+  font-style: italic;
+}
+
+.rezervacije-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.rezervacija-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  border-left: 4px solid #2e7d32;
+}
+
+.rezervacija-info p {
+  margin: 5px 0;
+  color: #333;
+}
+
+.delete-btn {
+  padding: 8px 15px;
+  background: #d32f2f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.delete-btn:hover {
+  background: #b71c1c;
+}
+
+/* Results View */
+.results-wrapper {
+  margin-top: 20px;
+}
+
+.results-wrapper h2 {
+  color: #1b5e20;
+  margin-bottom: 30px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.igra-card {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.igra-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.igra-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.igra-header h3 {
+  color: #1b5e20;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.total-score {
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.igra-details p {
+  margin: 8px 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.rezultati-mini {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.rezultati-label {
+  color: #1b5e20;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.rezultati-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  background: #e8f5e9;
+  color: #1b5e20;
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid #c8e6c9;
+}

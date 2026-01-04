@@ -47,3 +47,11 @@ h1 {
   transform: translateY(0);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
+
+.nav-button.secondary {
+  background: linear-gradient(135deg, #757575 0%, #424242 100%);
+}
+
+.nav-button.secondary:hover {
+  background: linear-gradient(135deg, #9e9e9e 0%, #616161 100%);
+}

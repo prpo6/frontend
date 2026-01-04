@@ -1,0 +1,171 @@
+<div class="igrisce-container">
+  <h1>Igrišče - Rezervacije in Rezultati</h1>
+
+  <div class="view-toggle">
+    <button 
+      [class.active]="viewMode === 'calendar'" 
+      (click)="switchToCalendar()"
+      class="toggle-btn">
+      Koledar Rezervacij
+    </button>
+    <button 
+      [class.active]="viewMode === 'results'" 
+      (click)="switchToResults()"
+      class="toggle-btn">
+      Rezultati Iger
+    </button>
+  </div>
+
+  <!-- Calendar View -->
+  <div *ngIf="viewMode === 'calendar'" class="calendar-section">
+    <div *ngIf="loading" class="loading">Nalaganje podatkov...</div>
+
+    <div *ngIf="!loading" class="calendar-wrapper">
+      <div class="calendar-header">
+        <button (click)="previousMonth()" class="nav-btn">&lt;</button>
+        <h2>{{ getMonthName() }}</h2>
+        <button (click)="nextMonth()" class="nav-btn">&gt;</button>
+      </div>
+
+      <div class="month-year-selector">
+        <div class="selector-group">
+          <label>Mesec:</label>
+          <select [(ngModel)]="selectedMonth" (change)="jumpToMonth()" class="month-select">
+            <option *ngFor="let month of months" [value]="month.value">{{ month.label }}</option>
+          </select>
+        </div>
+        <div class="selector-group">
+          <label>Leto:</label>
+          <select [(ngModel)]="selectedYear" (change)="jumpToMonth()" class="year-select">
+            <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="calendar">
+        <div class="weekday-header">
+          <div class="weekday">Pon</div>
+          <div class="weekday">Tor</div>
+          <div class="weekday">Sre</div>
+          <div class="weekday">Čet</div>
+          <div class="weekday">Pet</div>
+          <div class="weekday">Sob</div>
+          <div class="weekday">Ned</div>
+        </div>
+
+        <div class="calendar-grid">
+          <div 
+            *ngFor="let calendarDay of calendarDays" 
+            class="calendar-day"
+            [class.empty]="!calendarDay.day"
+            [class.has-rezervacije]="calendarDay.rezervacije?.length > 0"
+            [class.selected]="selectedDate && calendarDay.date && selectedDate.getTime() === calendarDay.date.getTime()"
+            [class.today]="calendarDay.isToday"
+            (click)="selectDay(calendarDay)">
+            <div class="day-number">{{ calendarDay.day }}</div>
+            <div *ngIf="calendarDay.rezervacije?.length > 0" class="rezervacije-count">
+              {{ calendarDay.rezervacije.length }} rezervacij
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selected Day Details -->
+      <div *ngIf="selectedDate" class="day-details">
+        <h3>Rezervacije za {{ formatDate(selectedDate) }}</h3>
+        <button (click)="toggleAddForm()" class="add-btn">
+          {{ showAddForm ? 'Prekliči' : '+ Dodaj Rezervacijo' }}
+        </button>
+
+        <!-- Add Form -->
+        <div *ngIf="showAddForm" class="add-form">
+          <div class="form-group clan-search-group">
+            <label>Član (ime in priimek):</label>
+            <input 
+              type="text" 
+              [(ngModel)]="clanSearchQuery" 
+              (input)="searchClan()"
+              placeholder="Vnesite ime in priimek"
+              autocomplete="off">
+            <div *ngIf="showClanDropdown" class="clan-dropdown">
+              <div 
+                *ngFor="let clan of searchedClani" 
+                class="clan-option"
+                (click)="selectClanFromDropdown(clan)">
+                {{ clan.ime }} {{ clan.priimek }}
+              </div>
+            </div>
+            <div *ngIf="selectedClan" class="selected-clan-info">
+              ✓ Izbran član: {{ selectedClan.ime }} {{ selectedClan.priimek }}
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Skupina:</label>
+            <input type="number" [(ngModel)]="newRezervacija.skupina" min="1" max="18">
+          </div>
+          <div class="form-group">
+            <label>Datum:</label>
+            <input type="date" [(ngModel)]="newRezervacija.datum">
+          </div>
+          <div class="form-group">
+            <label>Ura:</label>
+            <input type="time" [(ngModel)]="newRezervacija.ura">
+          </div>
+          <button (click)="addRezervacija()" class="save-btn">Shrani</button>
+        </div>
+
+        <!-- Rezervacije List -->
+        <div *ngIf="dayRezervacije.length === 0 && !showAddForm" class="empty-message">
+          Ni rezervacij za ta dan
+        </div>
+
+        <div class="rezervacije-list">
+          <div *ngFor="let rez of dayRezervacije" class="rezervacija-card">
+            <div class="rezervacija-info">
+              <p><strong>Ura:</strong> {{ rez.ura?.substring(0, 5) || rez.ura }}</p>
+              <p><strong>Skupina:</strong> {{ rez.skupina }}</p>
+              <p><strong>Član:</strong> {{ rez.clan ? (rez.clan.ime + ' ' + rez.clan.priimek) : rez.clanId }}</p>
+            </div>
+            <button (click)="deleteRezervacija(rez.id!)" class="delete-btn">Izbriši</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results View -->
+  <div *ngIf="viewMode === 'results'" class="results-section">
+    <div *ngIf="loading" class="loading">Nalaganje podatkov...</div>
+
+    <div *ngIf="!loading" class="results-wrapper">
+      <h2>Rezultati Iger</h2>
+      
+      <div *ngIf="igre.length === 0" class="empty-message">
+        Ni še nobenih rezultatov
+      </div>
+
+      <div class="results-grid">
+        <div *ngFor="let igra of igre" class="igra-card">
+          <div class="igra-header">
+            <h3>Igra #{{ igra.id?.slice(0, 8) }}</h3>
+            <span class="total-score" *ngIf="igra.totalScore">
+              Skupaj: {{ igra.totalScore }}
+            </span>
+          </div>
+          <div class="igra-details">
+            <p><strong>Član:</strong> {{ igra.clan ? (igra.clan.ime + ' ' + igra.clan.priimek) : igra.clanId }}</p>
+            <p><strong>Rezervacija ID:</strong> {{ igra.rezervacijaId.slice(0, 8) }}...</p>
+          </div>
+          <div *ngIf="igra.rezultati && igra.rezultati.length > 0" class="rezultati-mini">
+            <p class="rezultati-label">Rezultati po luknjah:</p>
+            <div class="rezultati-chips">
+              <span *ngFor="let rez of igra.rezultati" class="chip">
+                L{{ rez.luknja }}: {{ rez.rezultat }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
