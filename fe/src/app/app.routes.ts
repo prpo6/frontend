@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
 import { ClaniComponent } from './clani/clani.component';
+import { HomeComponent } from './home/home.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/clani', pathMatch: 'full' },
+  { path: '', component: HomeComponent },
   { path: 'clani', component: ClaniComponent }
 ];

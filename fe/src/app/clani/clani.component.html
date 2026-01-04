@@ -29,8 +29,24 @@
       <input type="text" [(ngModel)]="newClan.naslov" placeholder="Naslov">
     </div>
     <div class="form-group">
-      <label>Poštna številka:</label>
-      <input type="number" [(ngModel)]="newClan.postaId" placeholder="Poštna številka">
+      <label>Pošta:</label>
+      <div class="posta-select-group">
+        <select [(ngModel)]="newClan.postaId">
+          <option [value]="undefined">-- Izberi pošto --</option>
+          <option *ngFor="let posta of poste" [value]="posta.id">
+            {{ posta.postnaSt }} - {{ posta.kraj }}
+          </option>
+        </select>
+        <button class="btn-small" (click)="toggleAddPostaForm()">
+          {{ showAddPostaForm ? 'Zapri' : '+ Nova Pošta' }}
+        </button>
+      </div>
+      <div class="add-posta-inline" *ngIf="showAddPostaForm">
+        <input type="number" [(ngModel)]="newPosta.postnaSt" placeholder="Poštna številka" class="inline-input">
+        <input type="text" [(ngModel)]="newPosta.kraj" placeholder="Kraj" class="inline-input">
+        <button class="btn-save-small" (click)="addPosta()">Dodaj</button>
+        <button class="btn-cancel-small" (click)="cancelAddPosta()">Prekliči</button>
+      </div>
     </div>
     <div class="form-group">
       <label>Član Od:</label>
@@ -46,47 +62,60 @@
     </div>
   </div>
 
+  <!-- Loading indicator -->
+  <div *ngIf="loading" class="loading-message">
+    Nalaganje podatkov...
+  </div>
+
   <!-- Members Table -->
-  <table class="clani-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Ime</th>
-        <th>Priimek</th>
-        <th>Datum Rojstva</th>
-        <th>Handicap</th>
-        <th>Naslov</th>
-        <th>Poštna številka</th>
-        <th>Član Od</th>
-        <th>Potek Članstva</th>
-        <th>Akcije</th>
-      </tr>
-    </thead>
-    <tbody>
+  <div *ngIf="!loading">
+    <p *ngIf="clani.length === 0" class="no-data-message">
+      Ni članov. Kliknite "Dodaj Novega Člana" za dodajanje.
+    </p>
+    <table class="clani-table" *ngIf="clani.length > 0">
+      <thead>
+        <tr>
+          <th>Ime</th>
+          <th>Priimek</th>
+          <th>Datum Rojstva</th>
+          <th>Handicap</th>
+          <th>Naslov</th>
+          <th>Pošta</th>
+          <th>Član Od</th>
+          <th>Potek Članstva</th>
+          <th>Akcije</th>
+        </tr>
+      </thead>
+      <tbody>
       <tr *ngFor="let clan of clani">
         <ng-container *ngIf="editingClan?.id !== clan.id">
-          <td>{{ clan.id }}</td>
           <td>{{ clan.ime }}</td>
           <td>{{ clan.priimek }}</td>
           <td>{{ clan.datumRojstva }}</td>
           <td>{{ clan.handicap }}</td>
           <td>{{ clan.naslov }}</td>
-          <td>{{ clan.postaId }}</td>
+          <td>{{ clan.posta ? clan.posta.postnaSt + ' - ' + clan.posta.kraj : '' }}</td>
           <td>{{ clan.clanOd }}</td>
           <td>{{ clan.potekClanstva }}</td>
           <td>
             <button class="btn-edit" (click)="startEdit(clan)">Uredi</button>
-            <button class="btn-delete" (click)="deleteClan(clan.id)">Izbriši</button>
+            <button class="btn-delete" (click)="clan.id && deleteClan(clan.id)">Izbriši</button>
           </td>
         </ng-container>
         <ng-container *ngIf="editingClan?.id === clan.id">
-          <td>{{ clan.id }}</td>
           <td><input type="text" [(ngModel)]="editingClan!.ime"></td>
           <td><input type="text" [(ngModel)]="editingClan!.priimek"></td>
           <td><input type="date" [(ngModel)]="editingClan!.datumRojstva"></td>
           <td><input type="number" [(ngModel)]="editingClan!.handicap" step="0.1"></td>
           <td><input type="text" [(ngModel)]="editingClan!.naslov"></td>
-          <td><input type="number" [(ngModel)]="editingClan!.postaId"></td>
+          <td>
+            <select [(ngModel)]="editingClan!.postaId">
+              <option [value]="undefined">-- Izberi pošto --</option>
+              <option *ngFor="let posta of poste" [value]="posta.id">
+                {{ posta.postnaSt }} - {{ posta.kraj }}
+              </option>
+            </select>
+          </td>
           <td><input type="date" [(ngModel)]="editingClan!.clanOd"></td>
           <td><input type="date" [(ngModel)]="editingClan!.potekClanstva"></td>
           <td>
@@ -97,4 +126,5 @@
       </tr>
     </tbody>
   </table>
+  </div>
 </div>
