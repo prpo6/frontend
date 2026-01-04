@@ -1,0 +1,100 @@
+<div class="clani-container">
+  <h1>Upravljanje Članov</h1>
+
+  <button class="btn-add" (click)="showAddFormToggle()">
+    {{ showAddForm ? 'Zapri' : '+ Dodaj Novega Člana' }}
+  </button>
+
+  <!-- Add New Member Form -->
+  <div class="add-form" *ngIf="showAddForm">
+    <h2>Dodaj Novega Člana</h2>
+    <div class="form-group">
+      <label>Ime:</label>
+      <input type="text" [(ngModel)]="newClan.ime" placeholder="Ime">
+    </div>
+    <div class="form-group">
+      <label>Priimek:</label>
+      <input type="text" [(ngModel)]="newClan.priimek" placeholder="Priimek">
+    </div>
+    <div class="form-group">
+      <label>Datum Rojstva:</label>
+      <input type="date" [(ngModel)]="newClan.datumRojstva">
+    </div>
+    <div class="form-group">
+      <label>Handicap:</label>
+      <input type="number" [(ngModel)]="newClan.handicap" step="0.1" placeholder="Handicap">
+    </div>
+    <div class="form-group">
+      <label>Naslov:</label>
+      <input type="text" [(ngModel)]="newClan.naslov" placeholder="Naslov">
+    </div>
+    <div class="form-group">
+      <label>Poštna številka:</label>
+      <input type="number" [(ngModel)]="newClan.postaId" placeholder="Poštna številka">
+    </div>
+    <div class="form-group">
+      <label>Član Od:</label>
+      <input type="date" [(ngModel)]="newClan.clanOd">
+    </div>
+    <div class="form-group">
+      <label>Potek Članstva:</label>
+      <input type="date" [(ngModel)]="newClan.potekClanstva">
+    </div>
+    <div class="form-actions">
+      <button class="btn-save" (click)="addClan()">Shrani</button>
+      <button class="btn-cancel" (click)="cancelAdd()">Prekliči</button>
+    </div>
+  </div>
+
+  <!-- Members Table -->
+  <table class="clani-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Ime</th>
+        <th>Priimek</th>
+        <th>Datum Rojstva</th>
+        <th>Handicap</th>
+        <th>Naslov</th>
+        <th>Poštna številka</th>
+        <th>Član Od</th>
+        <th>Potek Članstva</th>
+        <th>Akcije</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let clan of clani">
+        <ng-container *ngIf="editingClan?.id !== clan.id">
+          <td>{{ clan.id }}</td>
+          <td>{{ clan.ime }}</td>
+          <td>{{ clan.priimek }}</td>
+          <td>{{ clan.datumRojstva }}</td>
+          <td>{{ clan.handicap }}</td>
+          <td>{{ clan.naslov }}</td>
+          <td>{{ clan.postaId }}</td>
+          <td>{{ clan.clanOd }}</td>
+          <td>{{ clan.potekClanstva }}</td>
+          <td>
+            <button class="btn-edit" (click)="startEdit(clan)">Uredi</button>
+            <button class="btn-delete" (click)="deleteClan(clan.id)">Izbriši</button>
+          </td>
+        </ng-container>
+        <ng-container *ngIf="editingClan?.id === clan.id">
+          <td>{{ clan.id }}</td>
+          <td><input type="text" [(ngModel)]="editingClan!.ime"></td>
+          <td><input type="text" [(ngModel)]="editingClan!.priimek"></td>
+          <td><input type="date" [(ngModel)]="editingClan!.datumRojstva"></td>
+          <td><input type="number" [(ngModel)]="editingClan!.handicap" step="0.1"></td>
+          <td><input type="text" [(ngModel)]="editingClan!.naslov"></td>
+          <td><input type="number" [(ngModel)]="editingClan!.postaId"></td>
+          <td><input type="date" [(ngModel)]="editingClan!.clanOd"></td>
+          <td><input type="date" [(ngModel)]="editingClan!.potekClanstva"></td>
+          <td>
+            <button class="btn-save" (click)="saveEdit()">Shrani</button>
+            <button class="btn-cancel" (click)="cancelEdit()">Prekliči</button>
+          </td>
+        </ng-container>
+      </tr>
+    </tbody>
+  </table>
+</div>
