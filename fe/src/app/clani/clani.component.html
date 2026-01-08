@@ -1,5 +1,8 @@
 <div class="clani-container">
-  <h1>Upravljanje Članov</h1>
+  <div class="header-with-home">
+    <h1>Upravljanje Članov</h1>
+    <button class="btn-home" (click)="navigateToHome()">🏠 Domov</button>
+  </div>
 
   <button class="btn-add" (click)="showAddFormToggle()">
     {{ showAddForm ? 'Zapri' : '+ Dodaj Novega Člana' }}

@@ -1,14 +1,26 @@
 <div class="home-container">
-  <h1>Golf Aplikacija</h1>
+  <div class="header">
+    <div class="welcome-section">
+      <h1>Golf Aplikacija</h1>
+      <p class="subtitle">Dobrodošli, <span class="username">{{ username }}</span>!</p>
+    </div>
+    <button class="logout-button" (click)="logout()">
+      🚪 Odjava
+    </button>
+  </div>
+  
   <div class="button-container">
-    <button class="nav-button" (click)="navigateToClani()">
-      Upravljanje Članov
+    <button class="nav-button user-button" (click)="navigateToUserRezervacije()">
+      📅 Moje Rezervacije
     </button>
-    <button class="nav-button" (click)="navigateToIgrisce()">
-      Igrišče & Rezervacije
+    <button class="nav-button user-button" (click)="navigateToUserTurnirji()">
+      🏆 Odprti Turnirji
     </button>
-    <button class="nav-button secondary" (click)="navigateToLogin()">
-      Prijava
+  </div>
+
+  <div class="button-container">
+    <button class="nav-button secondary" (click)="navigateToAdminHome()">
+      🔒 Admin Panel
     </button>
   </div>
 </div>

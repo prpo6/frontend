@@ -1,0 +1,119 @@
+<div class="user-rezervacije-container">
+  <div class="header-with-home">
+    <h1>Moje Rezervacije</h1>
+    <button class="btn-home" (click)="navigateToHome()">🏠 Domov</button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <p>Nalaganje...</p>
+  </div>
+
+  <!-- Calendar -->
+  <div *ngIf="!loading" class="calendar-section">
+    <!-- Month Navigation -->
+    <div class="month-navigation">
+      <button (click)="previousMonth()" class="nav-btn">◀ Prejšnji</button>
+      <h2>{{ getMonthName() }} {{ getYear() }}</h2>
+      <button (click)="nextMonth()" class="nav-btn">Naslednji ▶</button>
+    </div>
+
+    <!-- Month/Year Selector -->
+    <div class="month-selector">
+      <select [(ngModel)]="selectedMonth" (change)="jumpToMonth()">
+        <option *ngFor="let month of months" [value]="month.value">{{ month.label }}</option>
+      </select>
+      <select [(ngModel)]="selectedYear" (change)="jumpToMonth()">
+        <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+      </select>
+    </div>
+
+    <!-- Calendar Grid -->
+    <div class="calendar-grid">
+      <div class="calendar-header">Nedelja</div>
+      <div class="calendar-header">Ponedeljek</div>
+      <div class="calendar-header">Torek</div>
+      <div class="calendar-header">Sreda</div>
+      <div class="calendar-header">Četrtek</div>
+      <div class="calendar-header">Petek</div>
+      <div class="calendar-header">Sobota</div>
+
+      <div *ngFor="let calendarDay of calendarDays" 
+           [class.calendar-day]="calendarDay.day"
+           [class.empty]="!calendarDay.day"
+           [class.has-rezervacije]="calendarDay.rezervacije.length > 0"
+           [class.user-has-reservation]="calendarDay.userHasReservation"
+           [class.selected]="selectedDate && calendarDay.date?.getTime() === selectedDate.getTime()"
+           [class.today]="isToday(calendarDay.date)"
+           [class.tournament-day]="calendarDay.isTournamentDay"
+           (click)="selectDay(calendarDay)">
+        <div class="day-number" *ngIf="calendarDay.day">{{ calendarDay.day }}</div>
+        <div class="rezervacije-count" *ngIf="calendarDay.rezervacije.length > 0 && !calendarDay.isTournamentDay">
+          {{ calendarDay.rezervacije.length }} rezervacij
+        </div>
+        <div *ngIf="calendarDay.userHasReservation && !calendarDay.isTournamentDay" class="user-badge">
+          ✓ Vaša
+        </div>
+        <div *ngIf="calendarDay.isTournamentDay" class="tournament-label">🏆 TURNIR</div>
+      </div>
+    </div>
+
+    <!-- Selected Day Details -->
+    <div *ngIf="selectedDate" class="day-details">
+      <h3>{{ formatDate(selectedDate) }}</h3>
+      
+      <div *ngIf="!userHasReservationOnSelectedDay && !isSelectedDateTournamentDay()">
+        <button (click)="toggleAddForm()" class="add-btn">
+          {{ showAddForm ? 'Prekliči' : '+ Ustvari Rezervacijo' }}
+        </button>
+      </div>
+
+      <div *ngIf="userHasReservationOnSelectedDay" class="info-message">
+        ✓ Na ta dan že imate rezervacijo.
+      </div>
+
+      <div *ngIf="isSelectedDateTournamentDay()" class="tournament-notice">
+        Ta dan je rezerviran za turnir. Rezervacije niso možne.
+      </div>
+
+      <!-- Add Form -->
+      <div *ngIf="showAddForm && !userHasReservationOnSelectedDay" class="add-form">
+        <h4>Nova Rezervacija</h4>
+        
+        <div class="form-group">
+          <label>Datum:</label>
+          <input type="text" [value]="newRezervacija.datum" readonly>
+        </div>
+
+        <div class="form-group">
+          <label>Ura:</label>
+          <input type="time" [(ngModel)]="newRezervacija.ura" required>
+        </div>
+
+        <div class="form-group">
+          <label>Skupina:</label>
+          <input type="number" [(ngModel)]="newRezervacija.skupina" min="1" max="10" required>
+        </div>
+
+        <button (click)="addRezervacija()" class="save-btn">Ustvari</button>
+      </div>
+
+      <!-- Reservations List -->
+      <div class="rezervacije-list" *ngIf="dayRezervacije.length > 0">
+        <h4>Rezervacije na ta dan ({{ dayRezervacije.length }})</h4>
+        <div *ngFor="let rez of dayRezervacije" class="rezervacija-card"
+             [class.user-reservation]="rez.clanId === currentUserId">
+          <div class="rezervacija-info">
+            <p><strong>Ura:</strong> {{ rez.ura.substring(0, 5) }}</p>
+            <p><strong>Skupina:</strong> {{ rez.skupina }}</p>
+            <span *ngIf="rez.clanId === currentUserId" class="your-badge">Vaša rezervacija</span>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="dayRezervacije.length === 0" class="empty-message">
+        <p>Na ta dan ni rezervacij.</p>
+      </div>
+    </div>
+  </div>
+</div>

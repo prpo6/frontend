@@ -1,0 +1,366 @@
+.user-rezervacije-container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.header-with-home {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.btn-home {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(46, 125, 50, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-home:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4);
+  background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+}
+
+h1 {
+  color: #1b5e20;
+  margin-bottom: 30px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+/* Month Navigation */
+.month-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.month-navigation h2 {
+  color: #1b5e20;
+  margin: 0;
+}
+
+.nav-btn {
+  padding: 10px 20px;
+  background: white;
+  color: #2e7d32;
+  border: 2px solid #2e7d32;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+  background: #2e7d32;
+  color: white;
+}
+
+.month-selector {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.month-selector select {
+  padding: 8px 15px;
+  border: 2px solid #2e7d32;
+  border-radius: 8px;
+  font-size: 16px;
+  background: white;
+  color: #1b5e20;
+  cursor: pointer;
+}
+
+/* Calendar Grid */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.calendar-header {
+  text-align: center;
+  font-weight: 600;
+  color: #1b5e20;
+  padding: 10px;
+  background: #e8f5e9;
+  border-radius: 8px;
+}
+
+.calendar-day {
+  min-height: 100px;
+  padding: 10px;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.calendar-day:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border-color: #66bb6a;
+}
+
+.calendar-day.empty {
+  background: #f5f5f5;
+  cursor: default;
+  border: none;
+}
+
+.calendar-day.empty:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.calendar-day.has-rezervacije {
+  background: #e8f5e9;
+  border-color: #66bb6a;
+}
+
+.calendar-day.user-has-reservation {
+  background: #c8e6c9;
+  border: 2px solid #43a047;
+}
+
+.calendar-day.selected {
+  background: #a5d6a7;
+  border: 3px solid #2e7d32;
+  box-shadow: 0 0 15px rgba(46, 125, 50, 0.4);
+}
+
+.calendar-day.today {
+  border: 2px solid #ff6f00;
+  box-shadow: 0 0 10px rgba(255, 111, 0, 0.3);
+}
+
+.calendar-day.tournament-day {
+  background: #ffebee !important;
+  border: 2px solid #d32f2f !important;
+  cursor: not-allowed !important;
+}
+
+.calendar-day.tournament-day:hover {
+  transform: none !important;
+  box-shadow: 0 0 10px rgba(211, 47, 47, 0.3) !important;
+}
+
+.day-number {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.rezervacije-count {
+  font-size: 0.75rem;
+  color: #2e7d32;
+  font-weight: 500;
+}
+
+.user-badge {
+  margin-top: 5px;
+  padding: 2px 8px;
+  background: #43a047;
+  color: white;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.tournament-label {
+  margin-top: 8px;
+  padding: 4px 8px;
+  background: #c62828;
+  color: white;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Day Details */
+.day-details {
+  margin-top: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.day-details h3 {
+  color: #1b5e20;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.day-details h4 {
+  color: #2e7d32;
+  margin-bottom: 15px;
+}
+
+.add-btn {
+  padding: 12px 30px;
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(46, 125, 50, 0.3);
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.add-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4);
+}
+
+.info-message {
+  padding: 15px;
+  background: #c8e6c9;
+  border-left: 4px solid #43a047;
+  border-radius: 4px;
+  color: #1b5e20;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.tournament-notice {
+  margin-top: 20px;
+  padding: 15px;
+  background: #ffebee;
+  border-left: 4px solid #d32f2f;
+  border-radius: 4px;
+  color: #c62828;
+  font-weight: 500;
+}
+
+/* Add Form */
+.add-form {
+  background: #f5f5f5;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #1b5e20;
+  font-weight: 600;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #66bb6a;
+}
+
+.save-btn {
+  padding: 10px 25px;
+  background: #43a047;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.save-btn:hover {
+  background: #388e3c;
+  transform: translateY(-2px);
+}
+
+/* Reservations List */
+.rezervacije-list {
+  margin-top: 20px;
+}
+
+.rezervacija-card {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+}
+
+.rezervacija-card.user-reservation {
+  background: #e8f5e9;
+  border-color: #43a047;
+}
+
+.rezervacija-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.rezervacija-info {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.rezervacija-info p {
+  margin: 0;
+  color: #555;
+}
+
+.your-badge {
+  padding: 4px 12px;
+  background: #43a047;
+  color: white;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.empty-message {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+  font-style: italic;
+}

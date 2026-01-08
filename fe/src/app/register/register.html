@@ -1,0 +1,179 @@
+<div class="register-container">
+  <div class="register-card">
+    <h1>Ustvari račun</h1>
+    <p class="subtitle">Registrirajte se kot nov član Golf kluba</p>
+    
+    <form (ngSubmit)="register()">
+      <div class="form-section">
+        <h3>Osebni podatki</h3>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="ime">Ime *</label>
+            <input 
+              type="text" 
+              id="ime" 
+              [(ngModel)]="ime" 
+              name="ime"
+              placeholder="Vnesite ime"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="priimek">Priimek *</label>
+            <input 
+              type="text" 
+              id="priimek" 
+              [(ngModel)]="priimek" 
+              name="priimek"
+              placeholder="Vnesite priimek"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="datumRojstva">Datum rojstva</label>
+            <input 
+              type="date" 
+              id="datumRojstva" 
+              [(ngModel)]="datumRojstva" 
+              name="datumRojstva"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="handicap">Hendikep</label>
+            <input 
+              type="number" 
+              id="handicap" 
+              [(ngModel)]="handicap" 
+              name="handicap"
+              placeholder="Vnesite hendikep"
+              step="0.1"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="naslov">Naslov</label>
+          <input 
+            type="text" 
+            id="naslov" 
+            [(ngModel)]="naslov" 
+            name="naslov"
+            placeholder="Vnesite naslov"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="postnaSt">Poštna številka</label>
+            <input 
+              type="text" 
+              id="postnaSt" 
+              [(ngModel)]="postnaSt" 
+              name="postnaSt"
+              (ngModelChange)="onPostnaStChange()"
+              placeholder="npr. 1000"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="kraj">Mesto</label>
+            <input 
+              type="text" 
+              id="kraj" 
+              [(ngModel)]="kraj" 
+              name="kraj"
+              [disabled]="krajDisabled"
+              [class.disabled]="krajDisabled"
+              placeholder="npr. Ljubljana"
+            />
+            <small *ngIf="krajDisabled" class="help-text">Mesto samodejno izpolnjeno</small>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="clanOd">Začetek članstva</label>
+            <input 
+              type="date" 
+              id="clanOd" 
+              [(ngModel)]="clanOd" 
+              name="clanOd"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="potekClanstva">Potek članstva</label>
+            <input 
+              type="date" 
+              id="potekClanstva" 
+              [(ngModel)]="potekClanstva" 
+              name="potekClanstva"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Podatki za račun</h3>
+        
+        <div class="form-group">
+          <label for="username">Uporabniško ime *</label>
+          <input 
+            type="text" 
+            id="username" 
+            [(ngModel)]="username" 
+            name="username"
+            placeholder="Izberite uporabniško ime"
+            required
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="password">Geslo *</label>
+            <input 
+              type="password" 
+              id="password" 
+              [(ngModel)]="password" 
+              name="password"
+              placeholder="Vnesite geslo (najmanj 6 znakov)"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Potrdi geslo *</label>
+            <input 
+              type="password" 
+              id="confirmPassword" 
+              [(ngModel)]="confirmPassword" 
+              name="confirmPassword"
+              placeholder="Ponovno vnesite geslo"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" [disabled]="loading" class="register-btn">
+        {{ loading ? 'Ustvarjanje računa...' : 'Registriraj se' }}
+      </button>
+
+      <div class="login-link">
+        <p>Že imate račun? 
+          <a (click)="navigateToLogin()">Prijavite se tukaj</a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>

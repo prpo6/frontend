@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { IgrisceService, Rezervacija, Igra, Rezultat, Clan } from './igrisce.service';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -57,8 +58,13 @@ export class IgrisceComponent implements OnInit {
 
   constructor(
     private igrisceService: IgrisceService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
+
+  navigateToHome() {
+    this.router.navigate(['/']);
+  }
 
   ngOnInit() {
     // Generate years array (2020 to 2030)
@@ -221,7 +227,7 @@ export class IgrisceComponent implements OnInit {
     
     // Add empty slots for days before month starts
     for (let i = 0; i < startingDayOfWeek; i++) {
-      this.calendarDays.push({ day: null, date: null, rezervacije: [] });
+      this.calendarDays.push({ day: null, date: null, rezervacije: [], isTournamentDay: false });
     }
     
     // Add days of the month
@@ -230,13 +236,27 @@ export class IgrisceComponent implements OnInit {
       const dateStr = this.formatDate(date);
       const dayRezervacije = this.rezervacije.filter(r => r.datum === dateStr);
       
-      this.calendarDays.push({
+      const calendarDay = {
         day: day,
         date: date,
         dateStr: dateStr,
         rezervacije: dayRezervacije,
-        isToday: this.isToday(date)
+        isToday: this.isToday(date),
+        isTournamentDay: false
+      };
+      
+      // Check if there's a tournament on this day
+      this.igrisceService.isTournamentOnDate(dateStr).subscribe({
+        next: (hasTournament) => {
+          calendarDay.isTournamentDay = hasTournament;
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          console.error('Error checking tournament date:', error);
+        }
       });
+      
+      this.calendarDays.push(calendarDay);
     }
   }
 
@@ -259,12 +279,22 @@ export class IgrisceComponent implements OnInit {
     this.loadMonthData();
   }
 
+  isSelectedDateTournamentDay(): boolean {
+    if (!this.selectedDate) return false;
+    const selectedDay = this.calendarDays.find(d => 
+      d.date && d.date.getTime() === this.selectedDate!.getTime()
+    );
+    return selectedDay?.isTournamentDay || false;
+  }
+
   selectDay(calendarDay: any) {
-    if (calendarDay.day) {
+    if (calendarDay.day && !calendarDay.isTournamentDay) {
       this.selectedDate = calendarDay.date;
       // Always get fresh data from the rezervacije array to ensure clan info is included
       const dateStr = this.formatDate(calendarDay.date);
       this.dayRezervacije = this.rezervacije.filter(r => r.datum === dateStr);
+    } else if (calendarDay.isTournamentDay) {
+      alert('Ta dan je rezerviran za turnir. Rezervacije niso možne.');
     }
   }
 

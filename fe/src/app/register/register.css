@@ -1,4 +1,4 @@
-.login-container {
+.register-container {
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -7,13 +7,15 @@
   padding: 20px;
 }
 
-.login-card {
+.register-card {
   background: white;
   padding: 40px;
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   width: 100%;
-  max-width: 420px;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 h1 {
@@ -30,8 +32,32 @@ h1 {
   font-size: 14px;
 }
 
+.form-section {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.form-section:last-of-type {
+  border-bottom: none;
+}
+
+.form-section h3 {
+  color: #1e3a1e;
+  font-size: 18px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
 .form-group {
   margin-bottom: 20px;
+  position: relative;
 }
 
 label {
@@ -42,7 +68,7 @@ label {
   font-size: 14px;
 }
 
-input {
+input, select {
   width: 100%;
   padding: 12px;
   border: 1.5px solid #ddd;
@@ -52,9 +78,35 @@ input {
   box-sizing: border-box;
 }
 
-input:focus {
+input:focus, select:focus {
   outline: none;
   border-color: #2d5a2d;
+}
+
+input:disabled,
+input.disabled {
+  background-color: #f5f5f5;
+  color: #666;
+  cursor: not-allowed;
+  border-color: #d0d0d0;
+}
+
+.help-text {
+  display: block;
+  margin-top: 4px;
+  color: #2d5a2d;
+  font-size: 12px;
+  font-style: italic;
+}
+
+select {
+  cursor: pointer;
+  background-color: white;
+}
+
+select:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
 }
 
 .error-message {
@@ -67,7 +119,7 @@ input:focus {
   border-left: 4px solid #c33;
 }
 
-.login-btn {
+.register-btn {
   width: 100%;
   padding: 14px;
   background: linear-gradient(135deg, #2d5a2d 0%, #1e3a1e 100%);
@@ -80,30 +132,30 @@ input:focus {
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.login-btn:hover:not(:disabled) {
+.register-btn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(46, 90, 45, 0.4);
 }
 
-.login-btn:disabled {
+.register-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.register-link {
+.login-link {
   margin-top: 24px;
   text-align: center;
   font-size: 14px;
   color: #666;
 }
 
-.register-link a {
+.login-link a {
   color: #2d5a2d;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
 }
 
-.register-link a:hover {
+.login-link a:hover {
   text-decoration: underline;
 }

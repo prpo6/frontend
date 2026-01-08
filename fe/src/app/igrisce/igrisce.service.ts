@@ -108,4 +108,9 @@ export class IgrisceService {
     if (priimek) params += (params ? '&' : '') + `priimek=${priimek}`;
     return this.http.get<Clan[]>(`${this.claniApiUrl}/api/clani/search?${params}`);
   }
+
+  // Check if there's a tournament on a specific date
+  isTournamentOnDate(datum: string): Observable<boolean> {
+    return this.http.get<boolean>(`http://localhost:8083/api/turnirji/check-date?datum=${datum}`);
+  }
 }

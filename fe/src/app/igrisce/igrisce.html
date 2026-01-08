@@ -1,5 +1,8 @@
 <div class="igrisce-container">
-  <h1>Igrišče - Rezervacije in Rezultati</h1>
+  <div class="header-with-home">
+    <h1>Igrišče - Rezervacije in Rezultati</h1>
+    <button class="btn-home" (click)="navigateToHome()">🏠 Domov</button>
+  </div>
 
   <div class="view-toggle">
     <button 
@@ -59,11 +62,15 @@
             class="calendar-day"
             [class.empty]="!calendarDay.day"
             [class.has-rezervacije]="calendarDay.rezervacije?.length > 0"
+            [class.tournament-day]="calendarDay.isTournamentDay"
             [class.selected]="selectedDate && calendarDay.date && selectedDate.getTime() === calendarDay.date.getTime()"
             [class.today]="calendarDay.isToday"
             (click)="selectDay(calendarDay)">
             <div class="day-number">{{ calendarDay.day }}</div>
-            <div *ngIf="calendarDay.rezervacije?.length > 0" class="rezervacije-count">
+            <div *ngIf="calendarDay.isTournamentDay" class="tournament-label">
+              🏆 TURNIR
+            </div>
+            <div *ngIf="calendarDay.rezervacije?.length > 0 && !calendarDay.isTournamentDay" class="rezervacije-count">
               {{ calendarDay.rezervacije.length }} rezervacij
             </div>
           </div>
@@ -73,9 +80,14 @@
       <!-- Selected Day Details -->
       <div *ngIf="selectedDate" class="day-details">
         <h3>Rezervacije za {{ formatDate(selectedDate) }}</h3>
-        <button (click)="toggleAddForm()" class="add-btn">
+        <button *ngIf="!isSelectedDateTournamentDay()" 
+                (click)="toggleAddForm()" class="add-btn">
           {{ showAddForm ? 'Prekliči' : '+ Dodaj Rezervacijo' }}
         </button>
+        <div *ngIf="isSelectedDateTournamentDay()" 
+             class="tournament-notice">
+          Ta dan je rezerviran za turnir. Rezervacije niso možne.
+        </div>
 
         <!-- Add Form -->
         <div *ngIf="showAddForm" class="add-form">
@@ -122,7 +134,7 @@
         <div class="rezervacije-list">
           <div *ngFor="let rez of dayRezervacije" class="rezervacija-card">
             <div class="rezervacija-info">
-              <p><strong>Ura:</strong> {{ rez.ura?.substring(0, 5) || rez.ura }}</p>
+              <p><strong>Ura:</strong> {{ rez.ura.substring(0, 5) }}</p>
               <p><strong>Skupina:</strong> {{ rez.skupina }}</p>
               <p><strong>Član:</strong> {{ rez.clan ? (rez.clan.ime + ' ' + rez.clan.priimek) : rez.clanId }}</p>
             </div>

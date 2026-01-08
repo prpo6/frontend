@@ -1,0 +1,73 @@
+<div class="user-turnirji-container">
+  <div class="header-with-home">
+    <h1>Odprti Turnirji</h1>
+    <button class="btn-home" (click)="navigateToHome()">🏠 Domov</button>
+  </div>
+
+  <p class="subtitle">Prijavite se na turnir in tekmujte z drugimi igralci!</p>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <p>Nalaganje turnirjev...</p>
+  </div>
+
+  <!-- Turnirji List -->
+  <div *ngIf="!loading" class="turnirji-grid">
+    <div *ngFor="let turnir of turnirji" class="turnir-card">
+      <div class="turnir-header">
+        <h3>{{ turnir.naziv }}</h3>
+        <span [class]="'status-badge ' + getStatusClass(turnir.status)">
+          {{ getStatusLabel(turnir.status) }}
+        </span>
+      </div>
+
+      <p class="turnir-opis" *ngIf="turnir.opis">{{ turnir.opis }}</p>
+
+      <div class="turnir-details">
+        <div class="detail-row">
+          <strong>Tip:</strong> {{ getTipLabel(turnir.tipTurnirja) }}
+        </div>
+        <div class="detail-row">
+          <strong>Datum:</strong> {{ turnir.datumZacetek }}
+          <span *ngIf="turnir.datumKonec"> - {{ turnir.datumKonec }}</span>
+        </div>
+        <div class="detail-row">
+          <strong>Igralci:</strong> 
+          <span [class.full]="isTurnirFull(turnir)">
+            {{ turnir.trenutnoIgralcev || 0 }} / {{ turnir.maxIgralcev }}
+          </span>
+        </div>
+        <div class="detail-row">
+          <strong>Število rund:</strong> {{ turnir.steviloRund }}
+        </div>
+      </div>
+
+      <div class="turnir-actions">
+        <button *ngIf="canRegister(turnir)" 
+                (click)="registerForTurnir(turnir)" 
+                class="register-btn">
+          ✓ Prijavi se
+        </button>
+        <div *ngIf="isUserRegistered(turnir)" class="registered-actions">
+          <button class="registered-btn" disabled>
+            ✓ Že prijavljeni
+          </button>
+          <button (click)="unregisterFromTurnir(turnir)" class="unregister-btn">
+            ✕ Odjavi se
+          </button>
+        </div>
+        <button *ngIf="isTurnirFull(turnir) && !isUserRegistered(turnir)" 
+                class="full-btn" 
+                disabled>
+          Turnir je poln
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="turnirji.length === 0" class="empty-message">
+      <div class="empty-icon">🏆</div>
+      <p>Trenutno ni odprtih turnirjev za prijavo.</p>
+      <p class="empty-hint">Preverite pozneje za nove turnirje!</p>
+    </div>
+  </div>
+</div>

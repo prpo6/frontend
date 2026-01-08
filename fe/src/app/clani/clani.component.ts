@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ClaniService, Clan, Posta } from './clani.service';
 
 @Component({
@@ -20,7 +21,15 @@ export class ClaniComponent implements OnInit {
   newPosta: Posta = { postnaSt: 0, kraj: '' };
   loading = true;
 
-  constructor(private claniService: ClaniService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private claniService: ClaniService,
+    private cdr: ChangeDetectorRef,
+    private router: Router
+  ) {}
+
+  navigateToHome() {
+    this.router.navigate(['/']);
+  }
 
   ngOnInit() {
     this.loadClani();
