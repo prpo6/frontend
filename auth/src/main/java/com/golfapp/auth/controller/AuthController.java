@@ -3,6 +3,7 @@ package com.golfapp.auth.controller;
 import com.golfapp.auth.dto.LoginRequest;
 import com.golfapp.auth.dto.LoginResponse;
 import com.golfapp.auth.dto.RegisterRequest;
+import com.golfapp.auth.dto.RegisterEmployeeRequest;
 import com.golfapp.auth.dto.ValidateTokenResponse;
 import com.golfapp.auth.service.AuthService;
 import org.springframework.http.HttpStatus;
@@ -31,10 +32,31 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/login/employee")
+    public ResponseEntity<?> loginEmployee(@RequestBody LoginRequest request) {
+        try {
+            LoginResponse response = authService.loginEmployee(request);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorResponse(e.getMessage()));
+        }
+    }
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         try {
             LoginResponse response = authService.register(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+        }
+    }
+
+    @PostMapping("/register/employee")
+    public ResponseEntity<?> registerEmployee(@RequestBody RegisterEmployeeRequest request) {
+        try {
+            LoginResponse response = authService.registerEmployee(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
@@ -49,7 +71,7 @@ public class AuthController {
             ValidateTokenResponse response = authService.validateToken(token);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.ok(new ValidateTokenResponse(false, null, null, null));
+            return ResponseEntity.ok(new ValidateTokenResponse(false, null, null, null, null));
         }
     }
 

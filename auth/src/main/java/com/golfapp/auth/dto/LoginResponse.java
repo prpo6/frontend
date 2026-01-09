@@ -8,6 +8,7 @@ public class LoginResponse {
     private UUID clanId;
     private String accountType;
     private long expiresIn;
+    private String pozicija; // For employee accounts
 
     public LoginResponse() {
     }
@@ -18,6 +19,15 @@ public class LoginResponse {
         this.clanId = clanId;
         this.accountType = accountType;
         this.expiresIn = expiresIn;
+    }
+
+    public LoginResponse(String token, String username, UUID clanId, String accountType, long expiresIn, String pozicija) {
+        this.token = token;
+        this.username = username;
+        this.clanId = clanId;
+        this.accountType = accountType;
+        this.expiresIn = expiresIn;
+        this.pozicija = pozicija;
     }
 
     public String getToken() {
@@ -58,5 +68,13 @@ public class LoginResponse {
 
     public void setExpiresIn(long expiresIn) {
         this.expiresIn = expiresIn;
+    }
+
+    public String getPozicija() {
+        return pozicija;
+    }
+
+    public void setPozicija(String pozicija) {
+        this.pozicija = pozicija;
     }
 }

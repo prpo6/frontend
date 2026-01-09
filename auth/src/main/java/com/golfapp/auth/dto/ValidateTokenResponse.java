@@ -7,6 +7,7 @@ public class ValidateTokenResponse {
     private UUID clanId;
     private String username;
     private String accountType;
+    private String pozicija; // For employee accounts
 
     public ValidateTokenResponse() {
     }
@@ -16,6 +17,14 @@ public class ValidateTokenResponse {
         this.clanId = clanId;
         this.username = username;
         this.accountType = accountType;
+    }
+
+    public ValidateTokenResponse(boolean valid, UUID clanId, String username, String accountType, String pozicija) {
+        this.valid = valid;
+        this.clanId = clanId;
+        this.username = username;
+        this.accountType = accountType;
+        this.pozicija = pozicija;
     }
 
     public boolean isValid() {
@@ -48,5 +57,13 @@ public class ValidateTokenResponse {
 
     public void setAccountType(String accountType) {
         this.accountType = accountType;
+    }
+
+    public String getPozicija() {
+        return pozicija;
+    }
+
+    public void setPozicija(String pozicija) {
+        this.pozicija = pozicija;
     }
 }
