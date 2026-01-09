@@ -158,6 +158,11 @@ export class UserTurnirjiComponent implements OnInit {
            !this.isUserRegistered(turnir);
   }
 
+  canUnregister(turnir: Turnir): boolean {
+    // Can only unregister if tournament is still in pending or registration status
+    return turnir.status === 'pending' || turnir.status === 'registration';
+  }
+
   isUserRegistered(turnir: Turnir): boolean {
     return this.userRegistrations.get(turnir.id!) || false;
   }

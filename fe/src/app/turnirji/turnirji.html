@@ -92,6 +92,10 @@
         <div class="detail-row">
           <strong>Število rund:</strong> {{ turnir.steviloRund }}
         </div>
+        <div class="detail-row" *ngIf="turnir.status === 'completed' && turnir.zmagovalecId">
+          <strong>Zmagovalec:</strong> 
+          <span class="winner-name">{{ getWinnerName(turnir.zmagovalecId) }}</span>
+        </div>
       </div>
 
       <div class="turnir-actions">
@@ -114,6 +118,12 @@
           Zaključi
         </button>
 
+        <button *ngIf="turnir.status === 'active'" 
+                (click)="openScoreEntry(turnir)" 
+                class="action-btn score-btn">
+          Vnesi Rezultate Runde
+        </button>
+
         <!-- Always available actions -->
         <button *ngIf="turnir.status !== 'completed'" 
                 (click)="editTurnir(turnir)" 
@@ -129,6 +139,145 @@
 
     <div *ngIf="turnirji.length === 0" class="empty-message">
       <p>Ni še nobenih turnirjev. Ustvarite prvega!</p>
+    </div>
+  </div>
+
+  <!-- Leaderboard Score Entry View -->
+  <div *ngIf="viewMode === 'scores' && selectedTurnir" class="modal-overlay">
+    <div class="scores-modal" (click)="$event.stopPropagation()">
+      <div class="scores-header">
+        <button (click)="backToList()" class="back-btn">← Nazaj</button>
+        <h2>{{ selectedTurnir.naziv }} - Runda {{ currentRound }}</h2>
+      </div>
+
+      <div *ngIf="loading" class="loading">Nalaganje lestvice...</div>
+
+      <div *ngIf="!loading" class="scores-content">
+        <div class="round-info">
+          <p>Runda {{ currentRound }} / {{ selectedTurnir.steviloRund }}</p>
+          <button *ngIf="participants.length > 0" (click)="completeRound()" class="complete-round-btn">
+            {{ currentRound < selectedTurnir.steviloRund ? 'Zaključi Rundo' : 'Zaključi Turnir' }}
+          </button>
+        </div>
+
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>Pozicija</th>
+              <th>Ime</th>
+              <th>Rezultat</th>
+              <th>Akcije</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let participant of participants; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ participant.ime }} {{ participant.priimek }}</td>
+              <td>{{ participant.skupniRezultat || '-' }}</td>
+              <td>
+                <button (click)="openParticipantScoreForm(participant)" class="enter-score-btn">
+                  Vnesi Rezultat
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div *ngIf="participants.length === 0" class="empty-message">
+          Ni prijavljenih igralcev
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bracket View -->
+  <div *ngIf="viewMode === 'bracket' && selectedTurnir" class="modal-overlay">
+    <div class="bracket-modal" (click)="$event.stopPropagation()">
+      <div class="bracket-header">
+        <button (click)="backToList()" class="back-btn">← Nazaj</button>
+        <h2>{{ selectedTurnir.naziv }} - Izločilni Sistem</h2>
+      </div>
+
+    <div *ngIf="loading" class="loading">Nalaganje parov...</div>
+
+    <div *ngIf="!loading && bracketData" class="bracket-content">
+      <div *ngFor="let round of bracketData.rounds" class="bracket-round">
+        <h3>{{ round.runda === 5 ? 'Finale' : round.runda === 4 ? 'Polfinale' : 'Runda ' + round.runda }}</h3>
+        <div class="matches">
+          <div *ngFor="let match of round.tekme" class="match-card">
+            <div class="match-player" [class.winner]="match.zmagovalecId === match.clan1Id">
+              {{ match.clan1Id ? (match.clan1Ime + ' ' + match.clan1Priimek) : 'TBD' }}
+            </div>
+            <div class="match-vs">VS</div>
+            <div class="match-player" [class.winner]="match.zmagovalecId === match.clan2Id">
+              {{ match.clan2Id ? (match.clan2Ime + ' ' + match.clan2Priimek) : 'TBD' }}
+            </div>
+            <button *ngIf="match.clan1Id && match.clan2Id && !match.zmagovalecId"
+                    (click)="openMatchResultForm(match)" 
+                    class="select-winner-btn">
+              Izberi Zmagovalca
+            </button>
+            <div *ngIf="match.zmagovalecId" class="winner-badge">
+              Zmagovalec izbran
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="getFinalMatchWinner()" class="bracket-footer">
+        <button (click)="confirmTournamentWinner()" class="confirm-winner-btn">
+          Potrdi Zmagovalca
+        </button>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- Score Entry Modal -->
+  <div *ngIf="showScoreEntryForm" class="modal-overlay" (click)="closeScoreEntryForm()">
+    <div class="bulk-modal" (click)="$event.stopPropagation()">
+      <h2>Vnesi Rezultate - {{ selectedParticipant?.ime }} {{ selectedParticipant?.priimek }}</h2>
+      <p class="modal-subtitle">Runda {{ currentRound }}</p>
+      
+      <div class="holes-grid">
+        <div *ngFor="let hole of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]; let i = index" class="hole-input-group">
+          <label>Luknja {{ hole }}</label>
+          <input 
+            type="text" 
+            [(ngModel)]="bulkScores[i]" 
+            placeholder="-"
+            autocomplete="off"
+            name="hole_{{i}}"
+            pattern="[0-9]*"
+            inputmode="numeric"
+          />
+        </div>
+      </div>
+      
+      <div class="modal-actions">
+        <button (click)="closeScoreEntryForm()" class="cancel-btn">Prekliči</button>
+        <button (click)="submitBulkScores()" class="submit-btn">Potrdi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Match Result Modal -->
+  <div *ngIf="showMatchResultForm" class="modal-overlay" (click)="closeMatchResultForm()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h2>Izberi Zmagovalca</h2>
+      
+      <div class="winner-selection">
+        <button (click)="selectWinner(selectedMatch.clan1Id)" class="winner-option">
+          {{ selectedMatch.clan1Ime }} {{ selectedMatch.clan1Priimek }}
+        </button>
+        <div class="vs-divider">ali</div>
+        <button (click)="selectWinner(selectedMatch.clan2Id)" class="winner-option">
+          {{ selectedMatch.clan2Ime }} {{ selectedMatch.clan2Priimek }}
+        </button>
+      </div>
+      
+      <div class="modal-actions">
+        <button (click)="closeMatchResultForm()" class="cancel-btn">Prekliči</button>
+      </div>
     </div>
   </div>
 </div>

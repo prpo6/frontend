@@ -28,7 +28,7 @@ export class ClaniComponent implements OnInit {
   ) {}
 
   navigateToHome() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/admin']);
   }
 
   ngOnInit() {

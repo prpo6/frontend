@@ -1,0 +1,43 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="lock-icon">🔒</div>
+    <h1>Admin Prijava</h1>
+    <p class="subtitle">Prijavite se v administratorski panel</p>
+    
+    <form (ngSubmit)="login()">
+      <div class="form-group">
+        <label for="username">Uporabniško ime</label>
+        <input 
+          type="text" 
+          id="username" 
+          [(ngModel)]="username" 
+          name="username"
+          placeholder="Vnesite uporabniško ime"
+          [disabled]="loading"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Geslo</label>
+        <input 
+          type="password" 
+          id="password" 
+          [(ngModel)]="password" 
+          name="password"
+          placeholder="Vnesite geslo"
+          [disabled]="loading"
+          required
+        />
+      </div>
+
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" [disabled]="loading" class="login-btn">
+        {{ loading ? 'Prijavljanje...' : 'Prijavi se' }}
+      </button>
+    </form>
+  </div>
+</div>

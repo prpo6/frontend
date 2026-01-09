@@ -52,7 +52,9 @@
           <button class="registered-btn" disabled>
             ✓ Že prijavljeni
           </button>
-          <button (click)="unregisterFromTurnir(turnir)" class="unregister-btn">
+          <button *ngIf="canUnregister(turnir)" 
+                  (click)="unregisterFromTurnir(turnir)" 
+                  class="unregister-btn">
             ✕ Odjavi se
           </button>
         </div>

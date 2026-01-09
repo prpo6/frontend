@@ -31,10 +31,6 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/user/turnirji']);
   }
 
-  navigateToAdminHome() {
-    this.router.navigate(['/admin']);
-  }
-
   logout() {
     this.authService.logout();
   }

@@ -14,9 +14,10 @@ import { catchError } from 'rxjs/operators';
 })
 export class IgrisceComponent implements OnInit {
   rezervacije: Rezervacija[] = [];
+  pastRezervacije: Rezervacija[] = [];
   igre: Igra[] = [];
   loading = true;
-  viewMode: 'calendar' | 'results' = 'calendar';
+  viewMode: 'calendar' | 'results' | 'past' = 'calendar';
   
   // Calendar data
   currentDate = new Date(2025, 11, 1); // December 2025
@@ -56,6 +57,19 @@ export class IgrisceComponent implements OnInit {
     ura: ''
   };
 
+  // Score entry form (for existing games)
+  showScoreForm = false;
+  selectedIgraForScore: Igra | null = null;
+  newScore = {
+    luknja: 1,
+    rezultat: 1
+  };
+
+  // Bulk score entry form (for new games from reservations)
+  showBulkScoreForm = false;
+  selectedRezervacijaForScore: Rezervacija | null = null;
+  bulkScores: (number | null)[] = Array(18).fill(null);
+
   constructor(
     private igrisceService: IgrisceService,
     private cdr: ChangeDetectorRef,
@@ -63,7 +77,7 @@ export class IgrisceComponent implements OnInit {
   ) {}
 
   navigateToHome() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/admin']);
   }
 
   ngOnInit() {
@@ -414,5 +428,180 @@ export class IgrisceComponent implements OnInit {
   switchToResults() {
     this.viewMode = 'results';
     this.loadIgre();
+  }
+
+  switchToPast() {
+    this.viewMode = 'past';
+    this.loadPastRezervacije();
+  }
+
+  loadPastRezervacije() {
+    this.loading = true;
+    this.igrisceService.getPastRezervacije(50).subscribe({
+      next: (data) => {
+        this.pastRezervacije = data;
+        this.loadClanDataForPastRezervacije();
+      },
+      error: (error) => {
+        console.error('Napaka pri nalaganju preteklih rezervacij:', error);
+        this.loading = false;
+      }
+    });
+  }
+
+  loadClanDataForPastRezervacije() {
+    if (this.pastRezervacije.length === 0) {
+      this.loading = false;
+      return;
+    }
+
+    const clanIds = [...new Set(this.pastRezervacije.map(r => r.clanId))];
+    const clanRequests = clanIds.map(id => 
+      this.igrisceService.getClan(id).pipe(catchError(() => of(null)))
+    );
+
+    forkJoin(clanRequests).subscribe({
+      next: (clani: (Clan | null)[]) => {
+        const clanMap = new Map<string, Clan>();
+        clani.forEach(clan => {
+          if (clan && clan.id) {
+            clanMap.set(clan.id, clan);
+          }
+        });
+
+        this.pastRezervacije.forEach(rez => {
+          rez.clan = clanMap.get(rez.clanId);
+        });
+        
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Napaka pri nalaganju podatkov o članih:', error);
+        this.loading = false;
+      }
+    });
+  }
+
+  openBulkScoreForm(rezervacija: Rezervacija) {
+    this.selectedRezervacijaForScore = rezervacija;
+    this.showBulkScoreForm = true;
+    this.bulkScores = Array(18).fill(null);
+  }
+
+  closeBulkScoreForm() {
+    this.showBulkScoreForm = false;
+    this.selectedRezervacijaForScore = null;
+    this.bulkScores = Array(18).fill(null);
+  }
+
+  submitBulkScores() {
+    if (!this.selectedRezervacijaForScore || !this.selectedRezervacijaForScore.id || !this.selectedRezervacijaForScore.clanId) {
+      alert('Napaka: Manjkajoči podatki');
+      return;
+    }
+
+    // Create the game first
+    const gameRequest = {
+      rezervacijaId: this.selectedRezervacijaForScore.id,
+      clanId: this.selectedRezervacijaForScore.clanId
+    };
+
+    this.igrisceService.createIgra(gameRequest).subscribe({
+      next: (igra) => {
+        // Game created, now submit all non-empty scores
+        const scorePromises: any[] = [];
+        
+        this.bulkScores.forEach((score, index) => {
+          if (score !== null && score > 0 && igra.id) {
+            const rezultat: Rezultat = {
+              igraId: igra.id,
+              luknja: index + 1,
+              rezultat: score
+            };
+            scorePromises.push(this.igrisceService.createRezultat(rezultat));
+          }
+        });
+
+        if (scorePromises.length === 0) {
+          alert('Igra ustvarjena, vendar ni bilo vnesenih rezultatov');
+          this.closeBulkScoreForm();
+          this.switchToResults();
+          return;
+        }
+
+        // Submit all scores
+        forkJoin(scorePromises).subscribe({
+          next: () => {
+            alert(`Igra in ${scorePromises.length} rezultatov uspešno shranjenih!`);
+            this.closeBulkScoreForm();
+            this.switchToResults();
+          },
+          error: (error) => {
+            console.error('Napaka pri shranjevanju rezultatov:', error);
+            alert('Igra je ustvarjena, vendar je prišlo do napake pri shranjevanju rezultatov');
+            this.closeBulkScoreForm();
+            this.switchToResults();
+          }
+        });
+      },
+      error: (error) => {
+        console.error('Napaka pri ustvarjanju igre:', error);
+        alert('Napaka pri ustvarjanju igre');
+      }
+    });
+  }
+
+  openScoreForm(igra: Igra) {
+    this.selectedIgraForScore = igra;
+    this.showScoreForm = true;
+    this.newScore = {
+      luknja: 1,
+      rezultat: 1
+    };
+  }
+
+  closeScoreForm() {
+    this.showScoreForm = false;
+    this.selectedIgraForScore = null;
+    this.newScore = {
+      luknja: 1,
+      rezultat: 1
+    };
+  }
+
+  addScore() {
+    if (!this.selectedIgraForScore || !this.selectedIgraForScore.id) {
+      alert('Prosimo izberite igro');
+      return;
+    }
+
+    if (this.newScore.luknja < 1 || this.newScore.luknja > 18) {
+      alert('Luknja mora biti med 1 in 18');
+      return;
+    }
+
+    if (this.newScore.rezultat < 1) {
+      alert('Rezultat mora biti vsaj 1');
+      return;
+    }
+
+    const rezultat: Rezultat = {
+      igraId: this.selectedIgraForScore.id,
+      luknja: this.newScore.luknja,
+      rezultat: this.newScore.rezultat
+    };
+
+    this.igrisceService.createRezultat(rezultat).subscribe({
+      next: () => {
+        this.loadIgre();
+        this.closeScoreForm();
+        alert('Rezultat uspešno dodan');
+      },
+      error: (error) => {
+        console.error('Napaka pri dodajanju rezultata:', error);
+        alert('Napaka pri dodajanju rezultata');
+      }
+    });
   }
 }

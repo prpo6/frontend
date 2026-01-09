@@ -12,6 +12,12 @@
       Koledar Rezervacij
     </button>
     <button 
+      [class.active]="viewMode === 'past'" 
+      (click)="switchToPast()"
+      class="toggle-btn">
+      Pretekle Rezervacije
+    </button>
+    <button 
       [class.active]="viewMode === 'results'" 
       (click)="switchToResults()"
       class="toggle-btn">
@@ -121,7 +127,7 @@
           </div>
           <div class="form-group">
             <label>Ura:</label>
-            <input type="time" [(ngModel)]="newRezervacija.ura">
+            <input type="time" step="600" [(ngModel)]="newRezervacija.ura">
           </div>
           <button (click)="addRezervacija()" class="save-btn">Shrani</button>
         </div>
@@ -145,8 +151,37 @@
     </div>
   </div>
 
+  <!-- Past Reservations View -->
+  <div *ngIf="viewMode === 'past'" class="past-section">
+    <div *ngIf="loading" class="loading">Nalaganje podatkov...</div>
+
+    <div *ngIf="!loading" class="past-wrapper">
+      <h2>Pretekle Rezervacije - Vnos Rezultatov</h2>
+      <p class="instructions">Izberite rezervacijo za vnos rezultatov igre</p>
+      
+      <div *ngIf="pastRezervacije.length === 0" class="empty-message">
+        Ni preteklih rezervacij
+      </div>
+
+      <div class="past-grid">
+        <div *ngFor="let rez of pastRezervacije" class="past-card">
+          <div class="past-header">
+            <h3>{{ rez.datum }} ob {{ rez.ura }}</h3>
+            <span class="skupina-badge">Skupina {{ rez.skupina }}</span>
+          </div>
+          <div class="past-details">
+            <p><strong>Član:</strong> {{ rez.clan ? (rez.clan.ime + ' ' + rez.clan.priimek) : rez.clanId }}</p>
+          </div>
+          <button (click)="openBulkScoreForm(rez)" class="create-game-btn">
+            Vnesi Rezultate
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Results View -->
-  <div *ngIf="viewMode === 'results'" class="results-section">
+  <div *ngIf="viewMode === 'results'" class="results-section">`
     <div *ngIf="loading" class="loading">Nalaganje podatkov...</div>
 
     <div *ngIf="!loading" class="results-wrapper">
@@ -166,7 +201,6 @@
           </div>
           <div class="igra-details">
             <p><strong>Član:</strong> {{ igra.clan ? (igra.clan.ime + ' ' + igra.clan.priimek) : igra.clanId }}</p>
-            <p><strong>Rezervacija ID:</strong> {{ igra.rezervacijaId.slice(0, 8) }}...</p>
           </div>
           <div *ngIf="igra.rezultati && igra.rezultati.length > 0" class="rezultati-mini">
             <p class="rezultati-label">Rezultati po luknjah:</p>
@@ -176,7 +210,58 @@
               </span>
             </div>
           </div>
+          <button (click)="openScoreForm(igra)" class="add-score-btn">Dodaj Rezultat</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Score Entry Form Modal (for existing games) -->
+  <div *ngIf="showScoreForm" class="modal-overlay" (click)="closeScoreForm()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h2>Dodaj Rezultat</h2>
+      <p *ngIf="selectedIgraForScore" class="game-info">
+        Igra: {{ selectedIgraForScore.clan ? (selectedIgraForScore.clan.ime + ' ' + selectedIgraForScore.clan.priimek) : selectedIgraForScore.clanId }}
+      </p>
+      
+      <div class="form-group">
+        <label>Luknja (1-18):</label>
+        <input type="number" [(ngModel)]="newScore.luknja" min="1" max="18">
+      </div>
+      
+      <div class="form-group">
+        <label>Rezultat:</label>
+        <input type="number" [(ngModel)]="newScore.rezultat" min="1">
+      </div>
+      
+      <div class="modal-actions">
+        <button (click)="addScore()" class="save-btn">Shrani</button>
+        <button (click)="closeScoreForm()" class="cancel-btn">Prekliči</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bulk Score Entry Modal (for new games from reservations) -->
+  <div *ngIf="showBulkScoreForm" class="modal-overlay" (click)="closeBulkScoreForm()">
+    <div class="modal-content bulk-modal" (click)="$event.stopPropagation()">
+      <h2>Vnesi Rezultate</h2>
+      <p *ngIf="selectedRezervacijaForScore" class="game-info">
+        {{ selectedRezervacijaForScore.clan ? (selectedRezervacijaForScore.clan.ime + ' ' + selectedRezervacijaForScore.clan.priimek) : selectedRezervacijaForScore.clanId }}<br>
+        {{ selectedRezervacijaForScore.datum }} ob {{ selectedRezervacijaForScore.ura }}
+      </p>
+      
+      <p class="hint-text">Vnesi rezultate za igrane luknje (ostale pusti prazne)</p>
+      
+      <div class="holes-grid">
+        <div *ngFor="let hole of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]; let i = index" class="hole-input-group">
+          <label>L{{ hole }}:</label>
+          <input type="number" [(ngModel)]="bulkScores[i]" min="1" placeholder="-">
+        </div>
+      </div>
+      
+      <div class="modal-actions">
+        <button (click)="submitBulkScores()" class="save-btn">Shrani Vse</button>
+        <button (click)="closeBulkScoreForm()" class="cancel-btn">Prekliči</button>
       </div>
     </div>
   </div>

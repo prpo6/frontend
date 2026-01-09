@@ -75,4 +75,47 @@ export class TurnirjiService {
     const params = zmagovalecId ? new HttpParams().set('zmagovalecId', zmagovalecId) : new HttpParams();
     return this.http.patch<Turnir>(`${this.apiUrl}/${id}/complete`, {}, { params });
   }
+
+  // Leaderboard methods
+  getLeaderboard(turnirId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${turnirId}/leaderboard`);
+  }
+
+  enterTournamentScore(turnirId: string, request: { clanId: string; igraId: string; runda: number }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${turnirId}/scores`, request);
+  }
+
+  completeTournamentWithWinner(turnirId: string, winnerId: string): Observable<Turnir> {
+    const params = new HttpParams().set('zmagovalecId', winnerId);
+    return this.http.patch<Turnir>(`${this.apiUrl}/${turnirId}/complete`, {}, { params });
+  }
+
+  // Bracket methods
+  getBracket(turnirId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${turnirId}/bracket`);
+  }
+
+  updateMatchResult(request: { tekmaId: string; zmagovalecId: string; rezultat1: number; rezultat2: number }): Observable<any> {
+    return this.http.put(`${this.apiUrl}/matches/result`, request);
+  }
+
+  completeTournament(turnirId: string, zmagovalecId: string): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${turnirId}/complete?zmagovalecId=${zmagovalecId}`, {});
+  }
+
+  getClan(clanId: string): Observable<any> {
+    return this.http.get(`http://localhost:8080/api/clani/${clanId}`);
+  }
+
+  getParticipants(turnirId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${turnirId}/participants`);
+  }
+
+  createIgra(igra: { rezervacijaId: string | null; clanId: string }): Observable<any> {
+    return this.http.post('http://localhost:8085/api/igre', igra);
+  }
+
+  addRezultat(rezultat: { igraId: string; luknja: number; rezultat: number }): Observable<any> {
+    return this.http.post('http://localhost:8085/api/rezultati', rezultat);
+  }
 }

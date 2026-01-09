@@ -55,6 +55,10 @@ export class IgrisceService {
     return this.http.get<Rezervacija[]>(`${this.apiUrl}/rezervacije?datumOd=${datumOd}&datumDo=${datumDo}`);
   }
 
+  getPastRezervacije(limit: number = 50): Observable<Rezervacija[]> {
+    return this.http.get<Rezervacija[]>(`${this.apiUrl}/rezervacije/past?limit=${limit}`);
+  }
+
   createRezervacija(rezervacija: Rezervacija): Observable<Rezervacija> {
     return this.http.post<Rezervacija>(`${this.apiUrl}/rezervacije`, rezervacija);
   }
