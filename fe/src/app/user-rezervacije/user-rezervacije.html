@@ -61,6 +61,20 @@
     <!-- Selected Day Details -->
     <div *ngIf="selectedDate" class="day-details">
       <h3>{{ formatDate(selectedDate) }}</h3>
+       <div class="selected-weather" *ngIf="isWithinNext14Days(selectedDate)">
+          <ng-container *ngIf="weatherLoading">
+            ⏳ Nalagam vreme...
+          </ng-container>
+
+          <ng-container *ngIf="!weatherLoading && selectedDayWeather as w">
+            <span class="emoji">{{ weatherEmoji(w.weatherCode) }}</span>
+            <span class="temps">{{ w.tMin }}° / {{ w.tMax }}°</span>
+          </ng-container>
+
+          <ng-container *ngIf="!weatherLoading && !selectedDayWeather && weatherError">
+            {{ weatherError }}
+          </ng-container>
+        </div>
       
       <div *ngIf="!userHasReservationOnSelectedDay && !isSelectedDateTournamentDay()">
         <button (click)="toggleAddForm()" class="add-btn">
