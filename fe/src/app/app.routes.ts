@@ -12,6 +12,11 @@ import { UserTurnirjiComponent } from './user-turnirji/user-turnirji';
 import { inject } from '@angular/core';
 import { AdminAuthService } from './services/admin-auth.service';
 import { Router } from '@angular/router';
+import { ZaposleniComponent } from './zaposleni/zaposleni.component';
+import { ShrambaComponent } from './shramba/shramba.component';
+import { UrnikComponent } from './urnik/urnik';
+import { UrnikPregledComponent } from './urnik/urnik-pregled';
+import { UserTrenerjiComponent } from './user-trenerji/user-trenerji.component';
 
 const adminGuard = async () => {
   const adminAuthService = inject(AdminAuthService);
@@ -35,5 +40,10 @@ export const routes: Routes = [
   { path: 'igrisce', component: IgrisceComponent, canActivate: [adminGuard] },
   { path: 'turnirji', component: TurnirjiComponent, canActivate: [adminGuard] },
   { path: 'user/rezervacije', component: UserRezervacijeComponent },
-  { path: 'user/turnirji', component: UserTurnirjiComponent }
+  { path: 'user/turnirji', component: UserTurnirjiComponent },
+  { path: 'zaposleni', component: ZaposleniComponent, canActivate: [adminGuard] },
+  { path: 'shramba', component: ShrambaComponent, canActivate: [adminGuard] },
+  { path: 'urnik', component: UrnikPregledComponent, canActivate: [adminGuard] },
+  { path: 'urnik/uredi', component: UrnikComponent, canActivate: [adminGuard] },
+  { path: 'user/trenerji', component: UserTrenerjiComponent },
 ];

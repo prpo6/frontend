@@ -1,0 +1,51 @@
+<div class="page">
+  <div class="topbar">
+    <h2>🗓️ Urnik zaposlenih</h2>
+    <div class="actions">
+      <button (click)="navigateBack()">⬅ Domov</button>
+      <button (click)="deleteAll()">🗑️ Pobriši urnik</button>
+      <button (click)="goBackToOverview()">⬅ Nazaj na pregled</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <label>
+      Zaposleni:
+      <select [(ngModel)]="selectedZaposleniId" (change)="onChangeZaposleni()">
+        <option *ngFor="let z of zaposleni" [value]="z.id">
+          {{ z.ime }} {{ z.priimek }} ({{ z.pozicija }})
+        </option>
+      </select>
+    </label>
+
+    <div *ngIf="loadingZaposleni || loadingUrnik" class="loading">Nalagam...</div>
+  </div>
+
+  <div class="card" *ngFor="let d of days">
+    <div class="row">
+      <div class="dayTitle">{{ d.label }}</div>
+
+      <label class="toggle">
+        <input type="checkbox" [(ngModel)]="enabled[d.key]" />
+        Aktivno
+      </label>
+    </div>
+
+    <div class="grid">
+      <label>
+        Začetek
+        <input type="time" [(ngModel)]="zacetek[d.key]" [disabled]="!enabled[d.key]" />
+      </label>
+
+      <label>
+        Konec
+        <input type="time" [(ngModel)]="konec[d.key]" [disabled]="!enabled[d.key]" />
+      </label>
+    </div>
+
+    <div class="row">
+      <button (click)="saveDay(d.key)">Shrani</button>
+      <button (click)="deleteDay(d.key)">Pobriši dan</button>
+    </div>
+  </div>
+</div>

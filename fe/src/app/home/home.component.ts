@@ -10,6 +10,7 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
+
 export class HomeComponent implements OnInit {
   username: string | null = null;
 
@@ -29,6 +30,10 @@ export class HomeComponent implements OnInit {
 
   navigateToUserTurnirji() {
     this.router.navigate(['/user/turnirji']);
+  }
+
+  navigateToUserTrenerji() {
+    this.router.navigate(['/user/trenerji']);
   }
 
   logout() {

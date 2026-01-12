@@ -1,0 +1,31 @@
+<div class="page">
+  <div class="topbar">
+    <h2>🗓️ Urnik – pregled</h2>
+    <div class="actions">
+      <button (click)="back()">⬅ Home</button>
+      <button (click)="openEditor()">⚙️ Uredi urnik</button>
+      <button (click)="load()" [disabled]="loading">↻ Osveži</button>
+      <div>loading={{loading}} refresh={{refreshInProgress}}</div>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="loading">Nalagam...</div>
+
+  <div class="grid" *ngIf="!loading">
+    <div class="day card" *ngFor="let d of days">
+      <div class="dayTitle">{{ d.label }}</div>
+
+      <div class="empty" *ngIf="slotsByDay[d.key].length === 0">
+        Ni vnosov.
+      </div>
+
+      <div class="slot" *ngFor="let s of slotsByDay[d.key]">
+        <div class="line1">
+          <b>{{ s.zacetek }}–{{ s.konec }}</b>
+          <span class="badge">{{ s.pozicija }}</span>
+        </div>
+        <div class="line2">{{ s.ime }} {{ s.priimek }}</div>
+      </div>
+    </div>
+  </div>
+</div>

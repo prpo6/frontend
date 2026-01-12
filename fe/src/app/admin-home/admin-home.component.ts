@@ -4,12 +4,13 @@ import { CommonModule } from '@angular/common';
 import { AdminAuthService } from '../services/admin-auth.service';
 
 @Component({
-  selector: 'app-admin-home',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './admin-home.component.html',
-  styleUrls: ['./admin-home.component.css']
+    selector: 'app-admin-home',
+    standalone: true,
+    imports: [CommonModule],
+    templateUrl: './admin-home.component.html',
+    styleUrls: ['./admin-home.component.css']
 })
+
 export class AdminHomeComponent implements OnInit {
   username: string | null = null;
   pozicija: string | null = null;
@@ -31,6 +32,18 @@ export class AdminHomeComponent implements OnInit {
 
   navigateToTurnirji() {
     this.router.navigate(['/turnirji']);
+  }
+
+  navigateToZaposleni() {
+    this.router.navigate(['/zaposleni'])
+  }
+
+  navigateToUrnik() {
+    this.router.navigate(['/urnik']);
+  }
+
+  navigateToShramba() {
+    this.router.navigate(['/shramba'])
   }
 
   logout() {

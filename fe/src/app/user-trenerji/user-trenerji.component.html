@@ -1,0 +1,132 @@
+<div class="page">
+  <div class="topbar">
+    <div class="left">
+        <h2>Trenerji in termini</h2>
+    </div>
+
+    <button class="secondary" (click)="odpriMojeTermine()">
+        📅 Moji termini
+    </button>
+    <button class="back" (click)="nazaj()">← Nazaj</button>
+    </div>
+
+  <div *ngIf="loading" class="info">Nalagam trenerje…</div>
+  <div *ngIf="!loading && error" class="error">{{ error }}</div>
+
+  <div *ngIf="!loading && !error && trenerji.length === 0" class="info">
+    Ni najdenih trenerjev.
+  </div>
+
+  <div class="grid" *ngIf="!loading && !error && trenerji.length > 0">
+    <div class="card" *ngFor="let t of trenerji; trackBy: trackById">
+      <div class="name">{{ t.ime }} {{ t.priimek }}</div>
+      <div class="meta" *ngIf="t.email">📧 {{ t.email }}</div>
+      <div class="meta" *ngIf="t.telefon">📞 {{ t.telefon }}</div>
+      <div class="meta" *ngIf="t.specializacija">🎯 {{ t.specializacija }}</div>
+
+      <button class="primary" (click)="odpriTerminForm(t)">
+        ➕ Ustvari termin
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" *ngIf="selectedTrener">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="title">Ustvari termin</div>
+          <div class="subtitle">
+            {{ selectedTrener.ime }} {{ selectedTrener.priimek }}
+          </div>
+        </div>
+        <button class="icon" (click)="prekliciTermin()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <label>
+          Datum
+          <input type="date" [(ngModel)]="datum" />
+        </label>
+
+        <label>
+            Začetek (polna ura)
+            <select [(ngModel)]="zacetek">
+                <option value="" disabled>Izberi uro…</option>
+                <option *ngFor="let u of ure" [value]="u">{{ u }}</option>
+            </select>
+        </label>
+
+
+        <label>
+            Trajanje
+            <select [(ngModel)]="trajanjeUre">
+                <option [ngValue]="1">1 ura</option>
+                <option [ngValue]="2">2 uri</option>
+            </select>
+        </label>
+
+        <div class="error" *ngIf="terminError">{{ terminError }}</div>
+        <div class="success" *ngIf="terminSuccess">{{ terminSuccess }}</div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="secondary" (click)="prekliciTermin()" [disabled]="terminLoading">
+          Prekliči
+        </button>
+        <button class="primary" (click)="shraniTermin()" [disabled]="terminLoading">
+          {{ terminLoading ? 'Shranjujem…' : 'Shrani' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" *ngIf="showMojiModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="title">Moji termini</div>
+      </div>
+      <button class="icon" (click)="zapriMojeTermine()">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <div *ngIf="mojiLoading" class="info">Nalagam termine…</div>
+      <div *ngIf="!mojiLoading && mojiError" class="error">{{ mojiError }}</div>
+
+      <div *ngIf="!mojiLoading && !mojiError && mojiTermini.length === 0" class="info">
+        Trenutno nimaš prihodnjih terminov.
+      </div>
+
+      <div class="termin-list" *ngIf="!mojiLoading && !mojiError && mojiTermini.length > 0">
+        <div class="termin-row" *ngFor="let t of mojiTermini">
+          <div class="termin-main">
+            <div class="termin-title">🧑‍🏫
+              <ng-container *ngIf="trenerById[t.trenerId] as tr">
+                {{ tr.ime }} {{ tr.priimek }}
+              </ng-container>
+              <ng-container *ngIf="!trenerById[t.trenerId]">
+                Neznan trener
+              </ng-container>
+            </div>
+            <div class="termin-meta">
+              ⏰ {{ formatDateTime(t.zacetek) }} – {{ formatDateTime(t.konec) }}
+            </div>
+            <div class="termin-meta" *ngIf="trenerById[t.trenerId] as tr">
+              📧 {{ tr.email }} &nbsp; 📞 {{ tr.telefon }}
+            </div>
+          </div>
+
+          <button class="danger" (click)="izbrisiTermin(t.id)">
+            🗑️ Izbriši
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="secondary" (click)="zapriMojeTermine()">Zapri</button>
+    </div>
+  </div>
+</div>

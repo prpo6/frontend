@@ -1,0 +1,70 @@
+<div class="page">
+  <div class="topbar">
+    <h2>📦 Shramba</h2>
+    <div class="actions">
+      <button (click)="navigateBack()">⬅ Nazaj</button>
+      <button (click)="toggleAdd()">{{ showAddForm ? 'Zapri' : '➕ Dodaj artikel' }}</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">Nalagam...</div>
+
+  <div *ngIf="showAddForm" class="card">
+    <h3>Dodaj artikel</h3>
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="ime">Naziv</label>
+        <input id="ime" [(ngModel)]="newArtikel.imeArtikla" placeholder="npr. Golf voziček" />
+      </div>
+
+      <div class="field">
+        <label for="opis">Opis</label>
+        <input id="opis" [(ngModel)]="newArtikel.opis" placeholder="kratek opis (opcijsko)" />
+      </div>
+
+      <div class="field">
+        <label for="kolicina">Količina</label>
+        <input id="kolicina" type="number" min="0" [(ngModel)]="newArtikel.kolicina" />
+      </div>
+
+      <div class="field">
+        <label for="cena">Cena najema (€/h)</label>
+        <input id="cena" type="number" step="0.01" min="0" [(ngModel)]="newArtikel.cenaNajema" />
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn ghost" (click)="toggleAdd()">Prekliči</button>
+      <button class="btn primary" (click)="add()">Shrani</button>
+    </div>
+  </div>
+
+  <div class="card" *ngFor="let a of artikli">
+    <div *ngIf="editing?.id !== a.id">
+      <b>{{ a.imeArtikla }}</b>
+      <div>Količina: {{ a.kolicina }}</div>
+      <div>Opis: {{ a.opis }}</div>
+      <div>Cena Izposoje: {{ a.cenaNajema }} €/h</div>
+      <div class="row">
+        <button (click)="startEdit(a)">Uredi</button>
+        <button (click)="remove(a.id)">Izbriši</button>
+      </div>
+    </div>
+
+    <div *ngIf="editing?.id === a.id">
+      <div class="grid">
+        <label>Ime artikla <input [(ngModel)]="editing!.imeArtikla" /></label>
+        <label>Opis <input [(ngModel)]="editing!.opis" /></label>
+        <label>Količina <input type="number" [(ngModel)]="editing!.kolicina" /></label>
+        <label>Cena najema €/h
+          <input type="number" step="0.01" min="0" [(ngModel)]="editing!.cenaNajema" />
+        </label>
+      </div>
+      <div class="row">
+        <button (click)="saveEdit()">Shrani</button>
+        <button (click)="cancelEdit()">Prekliči</button>
+      </div>
+    </div>
+  </div>
+</div>

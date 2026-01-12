@@ -1,0 +1,53 @@
+<div class="page">
+  <div class="topbar">
+    <h2>🧑‍💼 Zaposleni</h2>
+    <div class="actions">
+      <button (click)="navigateBack()">⬅ Nazaj</button>
+      <button (click)="toggleAdd()">{{ showAddForm ? 'Zapri' : '➕ Dodaj' }}</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">Nalagam...</div>
+
+  <div *ngIf="showAddForm" class="card">
+    <h3>Dodaj zaposlenega</h3>
+    <div class="grid">
+      <label>Ime <input [(ngModel)]="newZaposleni.ime" /></label>
+      <label>Priimek <input [(ngModel)]="newZaposleni.priimek" /></label>
+      <label>Email <input [(ngModel)]="newZaposleni.email" /></label>
+      <label>Telefon <input [(ngModel)]="newZaposleni.telefon" /></label>
+      <label>Pozicija <input [(ngModel)]="newZaposleni.pozicija" /></label>
+      <label>Status <input [(ngModel)]="newZaposleni.status" /></label>
+    </div>
+    <button (click)="add()">Shrani</button>
+  </div>
+
+  <div class="card" *ngFor="let z of zaposleni">
+    <div *ngIf="editing?.id !== z.id">
+      <b>{{ z.ime }} {{ z.priimek }}</b>
+      <div>{{ z.pozicija }} | {{ z.status }}</div>
+      <div>{{ z.email }} | {{ z.telefon }}</div>
+
+      <div class="row">
+        <button (click)="startEdit(z)">Uredi</button>
+        <button (click)="remove(z.id)">Izbriši</button>
+      </div>
+    </div>
+
+    <div *ngIf="editing?.id === z.id">
+      <div class="grid">
+        <label>Ime <input [(ngModel)]="editing!.ime" /></label>
+        <label>Priimek <input [(ngModel)]="editing!.priimek" /></label>
+        <label>Email <input [(ngModel)]="editing!.email" /></label>
+        <label>Telefon <input [(ngModel)]="editing!.telefon" /></label>
+        <label>Pozicija <input [(ngModel)]="editing!.pozicija" /></label>
+        <label>Status <input [(ngModel)]="editing!.status" /></label>
+      </div>
+
+      <div class="row">
+        <button (click)="saveEdit()">Shrani</button>
+        <button (click)="cancelEdit()">Prekliči</button>
+      </div>
+    </div>
+  </div>
+</div>

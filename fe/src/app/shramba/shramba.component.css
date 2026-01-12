@@ -1,0 +1,42 @@
+.page { max-width: 900px;
+     margin: 0 auto; 
+     padding: 20px; 
+}
+.topbar { 
+    display:flex; 
+    justify-content:space-between; 
+    align-items:center; gap:12px; 
+}
+.actions { 
+    display:flex; 
+    gap:10px; 
+}
+.card { 
+    background:#fff; 
+    border-radius:12px; 
+    padding:16px; 
+    margin-top:12px; 
+}
+.grid { 
+    display:grid; 
+    grid-template-columns: repeat(2, 1fr); 
+    gap:10px; 
+}
+.row { 
+    display:flex; 
+    gap:10px; 
+    margin-top:10px; }
+.loading { 
+    padding: 16px; 
+}
+input { 
+    width:100%; 
+    padding:8px; 
+}
+button { 
+    padding:10px 14px; 
+    border-radius:10px; 
+    border:0; 
+    cursor:pointer; 
+}
+
