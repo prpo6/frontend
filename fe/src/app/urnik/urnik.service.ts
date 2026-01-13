@@ -17,7 +17,7 @@ export interface UrnikDto {
 
 @Injectable({ providedIn: 'root' })
 export class UrnikService {
-    private baseUrl = 'http://localhost:8091/api/zaposleni';
+    private baseUrl = window.location.hostname === 'localhost' ? 'http://localhost:8091/api/zaposleni' : '/api/zaposleni';
 
     constructor(private http: HttpClient) {}
 

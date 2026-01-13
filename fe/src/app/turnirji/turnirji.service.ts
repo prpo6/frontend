@@ -37,7 +37,7 @@ export interface CreateTurnirRequest {
   providedIn: 'root'
 })
 export class TurnirjiService {
-  private apiUrl = 'http://localhost:8083/api/turnirji';
+  private apiUrl = window.location.hostname === 'localhost' ? 'http://localhost:8083/api/turnirji' : '/api/turnirji';
 
   constructor(private http: HttpClient) {}
 
@@ -104,7 +104,8 @@ export class TurnirjiService {
   }
 
   getClan(clanId: string): Observable<any> {
-    return this.http.get(`http://localhost:8080/api/clani/${clanId}`);
+    const claniUrl = window.location.hostname === 'localhost' ? 'http://localhost:8080/api/clani' : '/api/clani';
+    return this.http.get(`${claniUrl}/${clanId}`);
   }
 
   getParticipants(turnirId: string): Observable<any[]> {
@@ -112,10 +113,12 @@ export class TurnirjiService {
   }
 
   createIgra(igra: { rezervacijaId: string | null; clanId: string }): Observable<any> {
-    return this.http.post('http://localhost:8085/api/igre', igra);
+    const igreUrl = window.location.hostname === 'localhost' ? 'http://localhost:8085/api/igre' : '/api/igre';
+    return this.http.post(igreUrl, igra);
   }
 
   addRezultat(rezultat: { igraId: string; luknja: number; rezultat: number }): Observable<any> {
-    return this.http.post('http://localhost:8085/api/rezultati', rezultat);
+    const rezultatiUrl = window.location.hostname === 'localhost' ? 'http://localhost:8085/api/rezultati' : '/api/rezultati';
+    return this.http.post(rezultatiUrl, rezultat);
   }
 }

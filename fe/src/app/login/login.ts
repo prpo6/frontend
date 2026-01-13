@@ -34,7 +34,11 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.errorMessage = '';
 
-    this.http.post<any>('http://localhost:8090/api/auth/login', {
+    const authUrl = window.location.hostname === 'localhost' 
+      ? 'http://localhost:8090/api/auth/login' 
+      : '/api/auth/login';
+
+    this.http.post<any>(authUrl, {
       username: this.username,
       password: this.password
     }).subscribe({

@@ -32,7 +32,8 @@ export class AdminAuthService {
       return Promise.resolve(false);
     }
 
-    return this.http.get<any>('http://localhost:8090/api/auth/validate', {
+    const authUrl = window.location.hostname === 'localhost' ? 'http://localhost:8090/api/auth' : '/api/auth';
+    return this.http.get<any>(`${authUrl}/validate`, {
       headers: { 'Authorization': `Bearer ${token}` }
     }).toPromise().then(response => {
       return response?.valid && response?.accountType === 'employee';
@@ -45,7 +46,8 @@ export class AdminAuthService {
   logoutAdmin() {
     const token = this.getAdminToken();
     if (token) {
-      this.http.post('http://localhost:8090/api/auth/logout', {}, {
+      const authUrl = window.location.hostname === 'localhost' ? 'http://localhost:8090/api/auth' : '/api/auth';
+      this.http.post(`${authUrl}/logout`, {}, {
         headers: { 'Authorization': `Bearer ${token}` }
       }).subscribe();
     }

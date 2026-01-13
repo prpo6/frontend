@@ -19,7 +19,7 @@ export interface Turnir {
   providedIn: 'root'
 })
 export class UserTurnirjiService {
-  private apiUrl = 'http://localhost:8083/api/turnirji';
+  private apiUrl = window.location.hostname === 'localhost' ? 'http://localhost:8083/api/turnirji' : '/api/turnirji';
 
   constructor(private http: HttpClient) {}
 

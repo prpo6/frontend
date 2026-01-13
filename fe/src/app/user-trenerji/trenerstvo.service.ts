@@ -28,7 +28,7 @@ export interface CreateTerminRequest {
 
 @Injectable({ providedIn: 'root' })
 export class TrenerstvoService {
-  private baseUrl = 'http://localhost:8085/api'; 
+  private baseUrl = window.location.hostname === 'localhost' ? 'http://localhost:8085/api' : '/api/trenerstvo'; 
 
   constructor(private http: HttpClient) {}
 

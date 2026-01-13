@@ -28,7 +28,8 @@ export class AdminLoginComponent implements OnInit {
   }
 
   validateAndRedirect(token: string) {
-    this.http.get<any>('http://localhost:8090/api/auth/validate', {
+    const authUrl = window.location.hostname === 'localhost' ? 'http://localhost:8090/api/auth' : '/api/auth';
+    this.http.get<any>(`${authUrl}/validate`, {
       headers: { 'Authorization': `Bearer ${token}` }
     }).subscribe({
       next: (response) => {
@@ -54,7 +55,8 @@ export class AdminLoginComponent implements OnInit {
 
     this.loading = true;
 
-    this.http.post<any>('http://localhost:8090/api/auth/login/employee', {
+    const authUrl = window.location.hostname === 'localhost' ? 'http://localhost:8090/api/auth' : '/api/auth';
+    this.http.post<any>(`${authUrl}/login/employee`, {
       username: this.username,
       password: this.password
     }).subscribe({

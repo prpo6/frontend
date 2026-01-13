@@ -19,7 +19,7 @@ export interface Rezervacija {
   providedIn: 'root'
 })
 export class UserRezervacijeService {
-  private apiUrl = 'http://localhost:8085/api/rezervacije';
+  private apiUrl = window.location.hostname === 'localhost' ? 'http://localhost:8085/api/rezervacije' : '/api/rezervacije';
 
   constructor(private http: HttpClient) {}
 
@@ -32,6 +32,7 @@ export class UserRezervacijeService {
   }
 
   isTournamentOnDate(datum: string): Observable<boolean> {
-    return this.http.get<boolean>(`http://localhost:8083/api/turnirji/check-date?datum=${datum}`);
+    const turnirjiUrl = window.location.hostname === 'localhost' ? 'http://localhost:8083/api/turnirji' : '/api/turnirji';
+    return this.http.get<boolean>(`${turnirjiUrl}/check-date?datum=${datum}`);
   }
 }

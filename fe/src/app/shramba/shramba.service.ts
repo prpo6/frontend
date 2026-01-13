@@ -14,7 +14,7 @@ export interface Artikel {
 
 @Injectable({ providedIn: 'root' })
 export class ShrambaService {
-  private apiUrl = 'http://localhost:8081/api/artikli';
+  private apiUrl = window.location.hostname === 'localhost' ? 'http://localhost:8081/api/artikli' : '/api/shramba/artikli';
 
   constructor(private http: HttpClient) {}
 

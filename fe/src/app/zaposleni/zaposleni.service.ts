@@ -19,7 +19,7 @@ export interface Zaposleni {
 
 @Injectable({ providedIn: 'root' })
 export class ZaposleniService {
-  private apiUrl = 'http://localhost:8091/api/zaposleni';
+  private apiUrl = window.location.hostname === 'localhost' ? 'http://localhost:8091/api/zaposleni' : '/api/zaposleni';
 
   constructor(private http: HttpClient) {}
 

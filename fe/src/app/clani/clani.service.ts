@@ -25,8 +25,8 @@ export interface Clan {
   providedIn: 'root'
 })
 export class ClaniService {
-  private apiUrl = 'http://localhost:8080/api/clani';
-  private posteUrl = 'http://localhost:8080/api/poste';
+  private apiUrl = window.location.hostname === 'localhost' ? 'http://localhost:8080/api/clani' : '/api/clani';
+  private posteUrl = window.location.hostname === 'localhost' ? 'http://localhost:8080/api/poste' : '/api/poste';
 
   constructor(private http: HttpClient) {}
 

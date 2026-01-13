@@ -68,7 +68,8 @@ export class RegisterComponent implements OnInit {
     }
 
     // Look up postal code
-    this.http.get<Posta>(`http://localhost:8080/api/poste/postnaSt/${postnaSt}`).subscribe({
+    const posteUrl = window.location.hostname === 'localhost' ? 'http://localhost:8080/api/poste' : '/api/poste';
+    this.http.get<Posta>(`${posteUrl}/postnaSt/${postnaSt}`).subscribe({
       next: (posta) => {
         // Postal code exists - auto-fill kraj and disable it
         this.kraj = posta.kraj;
@@ -122,7 +123,8 @@ export class RegisterComponent implements OnInit {
 
       // If postaId is null, it means postal code doesn't exist yet - create it
       if (this.postaId === null) {
-        this.http.post<Posta>('http://localhost:8080/api/poste', {
+        const posteUrl = window.location.hostname === 'localhost' ? 'http://localhost:8080/api/poste' : '/api/poste';
+        this.http.post<Posta>(posteUrl, {
           postnaSt: postnaSt,
           kraj: this.kraj
         }).subscribe({
@@ -164,10 +166,12 @@ export class RegisterComponent implements OnInit {
       clanData.handicap = parseFloat(this.handicap);
     }
 
-    this.http.post<any>('http://localhost:8080/api/clani', clanData).subscribe({
+    const claniUrl = window.location.hostname === 'localhost' ? 'http://localhost:8080/api/clani' : '/api/clani';
+    this.http.post<any>(claniUrl, clanData).subscribe({
       next: (clan) => {
         // Now create the account with the new clanId
-        this.http.post<any>('http://localhost:8090/api/auth/register', {
+        const authUrl = window.location.hostname === 'localhost' ? 'http://localhost:8090/api/auth' : '/api/auth';
+        this.http.post<any>(`${authUrl}/register`, {
           clanId: clan.id,
           username: this.username,
           password: this.password
